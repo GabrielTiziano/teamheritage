@@ -3,42 +3,18 @@ package com.gabriel.tiziano.teamheritage.mapper;
 import com.gabriel.tiziano.teamheritage.dto.request.StadiumRequest;
 import com.gabriel.tiziano.teamheritage.dto.response.StadiumResponse;
 import com.gabriel.tiziano.teamheritage.entities.Stadium;
+import org.mapstruct.Mapper;
+import org.mapstruct.Mapping;
+import org.mapstruct.MappingTarget;
 
-public class StadiumMapper {
-    private StadiumMapper() {}
+@Mapper
+public interface StadiumMapper {
 
-    public static StadiumResponse toResponse(Stadium stadium) {
-        if (stadium == null) {
-            return null;
-        }
+    StadiumResponse toResponse(Stadium stadium);
 
-        return StadiumResponse.builder()
-                .id(stadium.getId())
-                .name(stadium.getName())
-                .city(stadium.getCity())
-                .capacity(stadium.getCapacity())
-                .urlImg(stadium.getUrlImg())
-                .build();
-    }
+    @Mapping(target = "id", ignore = true)
+    Stadium toEntity(StadiumRequest request);
 
-    //POST
-    public static Stadium toEntity(StadiumRequest request) {
-        if (request == null) {
-            return null;
-        }
-        return Stadium.builder()
-                .name(request.name())
-                .city(request.city())
-                .capacity(request.capacity())
-                .urlImg(request.urlImg())
-                .build();
-    }
-
-    //PUT
-    public static void updateEntity(Stadium stadium, StadiumRequest request) {
-        stadium.setName(request.name());
-        stadium.setCity(request.city());
-        stadium.setCapacity(request.capacity());
-        stadium.setUrlImg(request.urlImg());
-    }
+    @Mapping(target = "id", ignore = true)
+    void updateEntity(@MappingTarget Stadium stadium, StadiumRequest request);
 }

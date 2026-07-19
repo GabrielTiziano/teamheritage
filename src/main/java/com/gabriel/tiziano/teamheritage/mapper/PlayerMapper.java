@@ -4,47 +4,31 @@ import com.gabriel.tiziano.teamheritage.dto.request.PlayerRequest;
 import com.gabriel.tiziano.teamheritage.dto.response.PlayerResponse;
 import com.gabriel.tiziano.teamheritage.entities.Club;
 import com.gabriel.tiziano.teamheritage.entities.Player;
+import org.mapstruct.Mapper;
+import org.mapstruct.Mapping;
+import org.mapstruct.MappingTarget;
 
-public class PlayerMapper {
-    private PlayerMapper() {}
+@Mapper
+public interface PlayerMapper {
 
-    public static PlayerResponse toResponse(Player player) {
-        if (player == null) {
-            return null;
-        }
+    @Mapping(target = "positionDescription", expression = "java(player.getPosition().getDescription())")
+    @Mapping(target = "clubId", source = "club.id")
+    @Mapping(target = "clubName", source = "club.name")
+    PlayerResponse toResponse(Player player);
 
-        return PlayerResponse.builder()
-                .id(player.getId())
-                .name(player.getName())
-                .position(player.getPosition())
-                .positionDescription(player.getPosition().getDescription())
-                .shirtNumber(player.getShirtNumber())
-                .urlImg(player.getUrlImg())
-                .clubId(player.getClub().getId())
-                .clubName(player.getClub().getName())
-                .build();
-    }
+    @Mapping(target = "id", ignore = true)
+    @Mapping(target = "name", source = "request.name")
+    @Mapping(target = "position", source = "request.position")
+    @Mapping(target = "shirtNumber", source = "request.shirtNumber")
+    @Mapping(target = "urlImg", source = "request.urlImg")
+    @Mapping(target = "club", source = "club")
+    Player toEntity(PlayerRequest request, Club club);
 
-    //POST
-    public static Player toEntity(PlayerRequest request, Club club) {
-        if (request == null) {
-            return null;
-        }
-        return Player.builder()
-                .name(request.name())
-                .position(request.position())
-                .shirtNumber(request.shirtNumber())
-                .urlImg(request.urlImg())
-                .club(club)
-                .build();
-    }
-
-    //PUT
-    public static void updateEntity(Player player, PlayerRequest request, Club club) {
-        player.setName(request.name());
-        player.setPosition(request.position());
-        player.setShirtNumber(request.shirtNumber());
-        player.setUrlImg(request.urlImg());
-        player.setClub(club);
-    }
+    @Mapping(target = "id", ignore = true)
+    @Mapping(target = "name", source = "request.name")
+    @Mapping(target = "position", source = "request.position")
+    @Mapping(target = "shirtNumber", source = "request.shirtNumber")
+    @Mapping(target = "urlImg", source = "request.urlImg")
+    @Mapping(target = "club", source = "club")
+    void updateEntity(@MappingTarget Player player, PlayerRequest request, Club club);
 }

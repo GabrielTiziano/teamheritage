@@ -18,21 +18,23 @@ public class PlayerService {
 
     private final PlayerRepository playerRepository;
     private final ClubRepository clubRepository;
+    private final PlayerMapper playerMapper;
 
-    public PlayerService(PlayerRepository playerRepository, ClubRepository clubRepository) {
+    public PlayerService(PlayerRepository playerRepository, ClubRepository clubRepository, PlayerMapper playerMapper) {
         this.playerRepository = playerRepository;
         this.clubRepository = clubRepository;
+        this.playerMapper = playerMapper;
     }
 
     @Transactional(readOnly = true)
     public Page<PlayerResponse> getPlayers(Pageable pageable) {
         return playerRepository.findAll(pageable)
-                .map(PlayerMapper::toResponse);
+                .map(playerMapper::toResponse);
     }
 
     @Transactional(readOnly = true)
     public PlayerResponse getPlayerById(Long playerId) {
-        return PlayerMapper.toResponse(resolvePlayer(playerId));
+        return playerMapper.toResponse(resolvePlayer(playerId));
     }
 
     @Transactional(readOnly = true)
@@ -41,22 +43,22 @@ public class PlayerService {
             throw new EntityNotFoundException("Club not found with id: " + clubId);
         }
         return playerRepository.findByClubId(clubId, pageable)
-                .map(PlayerMapper::toResponse);
+                .map(playerMapper::toResponse);
     }
 
     @Transactional
     public PlayerResponse createPlayer(PlayerRequest playerRequest) {
         Club club = resolveClub(playerRequest.clubId());
-        Player player = PlayerMapper.toEntity(playerRequest, club);
-        return PlayerMapper.toResponse(playerRepository.save(player));
+        Player player = playerMapper.toEntity(playerRequest, club);
+        return playerMapper.toResponse(playerRepository.save(player));
     }
 
     @Transactional
     public PlayerResponse updatePlayer(Long id, PlayerRequest playerRequest) {
         Player player = resolvePlayer(id);
         Club club = resolveClub(playerRequest.clubId());
-        PlayerMapper.updateEntity(player, playerRequest, club);
-        return PlayerMapper.toResponse(player);
+        playerMapper.updateEntity(player, playerRequest, club);
+        return playerMapper.toResponse(player);
     }
 
     @Transactional

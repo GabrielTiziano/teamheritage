@@ -4,45 +4,32 @@ import com.gabriel.tiziano.teamheritage.dto.request.ClubRequest;
 import com.gabriel.tiziano.teamheritage.dto.response.ClubResponse;
 import com.gabriel.tiziano.teamheritage.entities.Club;
 import com.gabriel.tiziano.teamheritage.entities.Stadium;
+import org.mapstruct.Mapper;
+import org.mapstruct.Mapping;
+import org.mapstruct.MappingTarget;
 
-public class ClubMapper {
-    private ClubMapper() {}
+@Mapper(uses = StadiumMapper.class)
+public interface ClubMapper {
 
-    public static ClubResponse toResponse(Club club) {
-        if (club == null) {
-            return null;
-        }
-        return ClubResponse.builder()
-                .id(club.getId())
-                .name(club.getName())
-                .founded(club.getFounded())
-                .urlImg(club.getUrlImg())
-                .createdAt(club.getCreatedAt())
-                .active(club.getActive())
-                .stadium(StadiumMapper.toResponse(club.getStadium()))
-                .build();
-    }
+    ClubResponse toResponse(Club club);
 
-    //POST
-    public static Club toEntity(ClubRequest request, Stadium stadium) {
-        if (request == null) {
-            return null;
-        }
-        return Club.builder()
-                .name(request.name())
-                .founded(request.founded())
-                .urlImg(request.urlImg())
-                .stadium(stadium)
-                .active(true)
-                .build();
-    }
+    @Mapping(target = "id", ignore = true)
+    @Mapping(target = "createdAt", ignore = true)
+    @Mapping(target = "players", ignore = true)
+    @Mapping(target = "active", constant = "true")
+    @Mapping(target = "name", source = "request.name")
+    @Mapping(target = "founded", source = "request.founded")
+    @Mapping(target = "urlImg", source = "request.urlImg")
+    @Mapping(target = "stadium", source = "stadium")
+    Club toEntity(ClubRequest request, Stadium stadium);
 
-    //PUT
-    public static void updateEntity(Club club, ClubRequest request, Stadium stadium) {
-        club.setName(request.name());
-        club.setFounded(request.founded());
-        club.setUrlImg(request.urlImg());
-        club.setStadium(stadium);
-    }
-
+    @Mapping(target = "id", ignore = true)
+    @Mapping(target = "createdAt", ignore = true)
+    @Mapping(target = "players", ignore = true)
+    @Mapping(target = "active", ignore = true)
+    @Mapping(target = "name", source = "request.name")
+    @Mapping(target = "founded", source = "request.founded")
+    @Mapping(target = "urlImg", source = "request.urlImg")
+    @Mapping(target = "stadium", source = "stadium")
+    void updateEntity(@MappingTarget Club club, ClubRequest request, Stadium stadium);
 }
