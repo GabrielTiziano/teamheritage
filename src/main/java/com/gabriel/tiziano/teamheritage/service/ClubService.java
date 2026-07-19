@@ -18,36 +18,38 @@ public class ClubService {
 
     private final ClubRepository clubRepository;
     private final StadiumRepository stadiumRepository;
+    private final ClubMapper clubMapper;
 
-    public ClubService(ClubRepository clubRepository, StadiumRepository stadiumRepository) {
+    public ClubService(ClubRepository clubRepository, StadiumRepository stadiumRepository, ClubMapper clubMapper) {
         this.clubRepository = clubRepository;
         this.stadiumRepository = stadiumRepository;
+        this.clubMapper = clubMapper;
     }
 
     @Transactional(readOnly = true)
     public Page<ClubResponse> getClubs(Pageable pageable) {
         return clubRepository.findAll(pageable)
-                .map(ClubMapper::toResponse);
+                .map(clubMapper::toResponse);
     }
 
     @Transactional(readOnly = true)
     public ClubResponse getClubById(Long clubId) {
-        return ClubMapper.toResponse(resolveClub(clubId));
+        return clubMapper.toResponse(resolveClub(clubId));
     }
 
     @Transactional
     public ClubResponse createClub(ClubRequest clubRequest) {
         Stadium stadium = resolveStadium(clubRequest.stadiumId());
-        Club club = ClubMapper.toEntity(clubRequest, stadium);
-        return ClubMapper.toResponse(clubRepository.save(club));
+        Club club = clubMapper.toEntity(clubRequest, stadium);
+        return clubMapper.toResponse(clubRepository.save(club));
     }
 
     @Transactional
     public ClubResponse updateClub(Long id, ClubRequest clubRequest) {
         Club club = resolveClub(id);
         Stadium stadium = resolveStadium(clubRequest.stadiumId());
-        ClubMapper.updateEntity(club, clubRequest, stadium);
-        return ClubMapper.toResponse(club);
+        clubMapper.updateEntity(club, clubRequest, stadium);
+        return clubMapper.toResponse(club);
     }
 
     @Transactional

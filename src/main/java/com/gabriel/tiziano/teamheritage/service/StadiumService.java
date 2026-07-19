@@ -15,33 +15,35 @@ import org.springframework.transaction.annotation.Transactional;
 public class StadiumService {
 
     private final StadiumRepository stadiumRepository;
+    private final StadiumMapper stadiumMapper;
 
-    public StadiumService(StadiumRepository stadiumRepository) {
+    public StadiumService(StadiumRepository stadiumRepository, StadiumMapper stadiumMapper) {
         this.stadiumRepository = stadiumRepository;
+        this.stadiumMapper = stadiumMapper;
     }
 
     @Transactional(readOnly = true)
     public Page<StadiumResponse> getStadiums(Pageable pageable) {
         return stadiumRepository.findAll(pageable)
-                .map(StadiumMapper::toResponse);
+                .map(stadiumMapper::toResponse);
     }
 
     @Transactional(readOnly = true)
     public StadiumResponse getStadiumById(Long stadiumId) {
-        return StadiumMapper.toResponse(resolveStadium(stadiumId));
+        return stadiumMapper.toResponse(resolveStadium(stadiumId));
     }
 
     @Transactional
     public StadiumResponse createStadium(StadiumRequest stadiumRequest) {
-        Stadium stadium = StadiumMapper.toEntity(stadiumRequest);
-        return StadiumMapper.toResponse(stadiumRepository.save(stadium));
+        Stadium stadium = stadiumMapper.toEntity(stadiumRequest);
+        return stadiumMapper.toResponse(stadiumRepository.save(stadium));
     }
 
     @Transactional
     public StadiumResponse updateStadium(Long id, StadiumRequest stadiumRequest) {
         Stadium stadium = resolveStadium(id);
-        StadiumMapper.updateEntity(stadium, stadiumRequest);
-        return StadiumMapper.toResponse(stadium);
+        stadiumMapper.updateEntity(stadium, stadiumRequest);
+        return stadiumMapper.toResponse(stadium);
     }
 
     @Transactional
