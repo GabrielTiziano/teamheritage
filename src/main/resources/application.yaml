@@ -17,7 +17,5 @@ spring:
     enabled: true
 
 jwt:
-  public:
-    key: classpath:authz.pub
-  private:
-    key: classpath:authz.pem
+  public-key: classpath:app.pub
+  private-key: classpath:app.key
