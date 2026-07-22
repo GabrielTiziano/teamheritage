@@ -1,4 +1,4 @@
-package com.gabriel.tiziano.teamheritage.config;
+package com.gabriel.tiziano.teamheritage.config.security;
 
 import com.nimbusds.jose.jwk.JWK;
 import com.nimbusds.jose.jwk.JWKSet;

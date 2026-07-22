@@ -1,5 +1,7 @@
 package com.gabriel.tiziano.teamheritage.controller;
 
+import com.gabriel.tiziano.teamheritage.config.security.annotations.stadium.CanReadStadium;
+import com.gabriel.tiziano.teamheritage.config.security.annotations.stadium.CanWriteStadium;
 import com.gabriel.tiziano.teamheritage.dto.request.StadiumRequest;
 import com.gabriel.tiziano.teamheritage.dto.response.StadiumResponse;
 import com.gabriel.tiziano.teamheritage.service.StadiumService;
@@ -22,17 +24,20 @@ public class StadiumController {
         this.stadiumService = stadiumService;
     }
 
+    @CanReadStadium
     @GetMapping
     public ResponseEntity<Page<StadiumResponse>> getStadiums(
             @PageableDefault(size = 20, sort = "name") Pageable pageable) {
         return ResponseEntity.ok(stadiumService.getStadiums(pageable));
     }
 
+    @CanReadStadium
     @GetMapping("/{id}")
     public ResponseEntity<StadiumResponse> getStadiumById(@PathVariable Long id) {
         return ResponseEntity.ok(stadiumService.getStadiumById(id));
     }
 
+    @CanWriteStadium
     @PostMapping
     public ResponseEntity<StadiumResponse> createStadium(@Valid @RequestBody StadiumRequest stadiumRequest) {
         StadiumResponse created = stadiumService.createStadium(stadiumRequest);
@@ -43,12 +48,14 @@ public class StadiumController {
         return ResponseEntity.created(location).body(created);
     }
 
+    @CanWriteStadium
     @PutMapping("/{id}")
     public ResponseEntity<StadiumResponse> updateStadium(@PathVariable Long id,
                                                          @Valid @RequestBody StadiumRequest stadiumRequest) {
         return ResponseEntity.ok(stadiumService.updateStadium(id, stadiumRequest));
     }
 
+    @CanWriteStadium
     @DeleteMapping("/{id}")
     public ResponseEntity<Void> deleteStadium(@PathVariable Long id) {
         stadiumService.deleteStadium(id);

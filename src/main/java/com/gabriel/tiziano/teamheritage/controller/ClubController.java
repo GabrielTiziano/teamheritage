@@ -1,5 +1,7 @@
 package com.gabriel.tiziano.teamheritage.controller;
 
+import com.gabriel.tiziano.teamheritage.config.security.annotations.club.CanReadClub;
+import com.gabriel.tiziano.teamheritage.config.security.annotations.club.CanWriteClub;
 import com.gabriel.tiziano.teamheritage.dto.request.ClubRequest;
 import com.gabriel.tiziano.teamheritage.dto.response.ClubResponse;
 import com.gabriel.tiziano.teamheritage.dto.response.PlayerResponse;
@@ -26,17 +28,20 @@ public class ClubController {
         this.playerService = playerService;
     }
 
+    @CanReadClub
     @GetMapping
     public ResponseEntity<Page<ClubResponse>> getClubs(
             @PageableDefault(size = 20, sort = "name") Pageable pageable) {
         return ResponseEntity.ok(clubService.getClubs(pageable));
     }
 
+    @CanReadClub
     @GetMapping("{id}")
     public ResponseEntity<ClubResponse> getClubById(@PathVariable Long id) {
         return ResponseEntity.ok(clubService.getClubById(id));
     }
 
+    @CanReadClub
     @GetMapping("/{id}/players")
     public ResponseEntity<Page<PlayerResponse>> getClubPlayers(
             @PathVariable Long id,
@@ -44,6 +49,7 @@ public class ClubController {
         return ResponseEntity.ok(playerService.getPlayersByClubId(id, pageable));
     }
 
+    @CanWriteClub
     @PostMapping
     public ResponseEntity<ClubResponse> createClub(@Valid @RequestBody ClubRequest clubRequest) {
         ClubResponse created = clubService.createClub(clubRequest);
@@ -54,11 +60,13 @@ public class ClubController {
         return ResponseEntity.created(location).body(created);
     }
 
+    @CanWriteClub
     @PutMapping("{id}")
     public ResponseEntity<ClubResponse> updateClub(@PathVariable Long id, @Valid @RequestBody ClubRequest clubRequest) {
         return ResponseEntity.ok(clubService.updateClub(id, clubRequest));
     }
 
+    @CanWriteClub
     @DeleteMapping("{id}")
     public ResponseEntity<Void> deleteClub(@PathVariable Long id) {
         clubService.deleteClub(id);
