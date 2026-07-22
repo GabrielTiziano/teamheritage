@@ -47,7 +47,7 @@ public class LoginService {
                 .expiresAt(java.time.Instant.now().plusSeconds(expiresIn))
                 .issuedAt(java.time.Instant.now())
                 .claim("email", user.getEmail())
-                .claim("scopes", scopes)
+                .claim("scope", scopes)
                 .build();
 
         String token = jwtEncoder.encode(JwtEncoderParameters.from(jwt)).getTokenValue();
