@@ -4,11 +4,12 @@ import com.gabriel.tiziano.teamheritage.dto.request.ClubRequest;
 import com.gabriel.tiziano.teamheritage.dto.response.ClubResponse;
 import com.gabriel.tiziano.teamheritage.entities.Club;
 import com.gabriel.tiziano.teamheritage.entities.Stadium;
+import org.mapstruct.InjectionStrategy;
 import org.mapstruct.Mapper;
 import org.mapstruct.Mapping;
 import org.mapstruct.MappingTarget;
 
-@Mapper(uses = StadiumMapper.class)
+@Mapper(uses = StadiumMapper.class, injectionStrategy = InjectionStrategy.CONSTRUCTOR)
 public interface ClubMapper {
 
     ClubResponse toResponse(Club club);
