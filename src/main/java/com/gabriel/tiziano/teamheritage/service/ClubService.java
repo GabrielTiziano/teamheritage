@@ -4,10 +4,10 @@ import com.gabriel.tiziano.teamheritage.dto.request.ClubRequest;
 import com.gabriel.tiziano.teamheritage.dto.response.ClubResponse;
 import com.gabriel.tiziano.teamheritage.entities.Club;
 import com.gabriel.tiziano.teamheritage.entities.Stadium;
+import com.gabriel.tiziano.teamheritage.exception.ResourceNotFoundException;
 import com.gabriel.tiziano.teamheritage.mapper.ClubMapper;
 import com.gabriel.tiziano.teamheritage.repository.ClubRepository;
 import com.gabriel.tiziano.teamheritage.repository.StadiumRepository;
-import jakarta.persistence.EntityNotFoundException;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
@@ -60,7 +60,7 @@ public class ClubService {
 
     private Club resolveClub(Long clubId) {
         return clubRepository.findById(clubId)
-                .orElseThrow(() -> new EntityNotFoundException("Club not found with id: " + clubId));
+                .orElseThrow(() -> new ResourceNotFoundException("Club not found with id: " + clubId));
     }
 
     private Stadium resolveStadium(Long stadiumId) {
@@ -68,6 +68,6 @@ public class ClubService {
             return null;
         }
         return stadiumRepository.findById(stadiumId)
-                .orElseThrow(() -> new EntityNotFoundException("Stadium not found with id: " + stadiumId));
+                .orElseThrow(() -> new ResourceNotFoundException("Stadium not found with id: " + stadiumId));
     }
 }

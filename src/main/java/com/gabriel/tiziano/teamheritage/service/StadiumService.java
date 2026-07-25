@@ -3,9 +3,9 @@ package com.gabriel.tiziano.teamheritage.service;
 import com.gabriel.tiziano.teamheritage.dto.request.StadiumRequest;
 import com.gabriel.tiziano.teamheritage.dto.response.StadiumResponse;
 import com.gabriel.tiziano.teamheritage.entities.Stadium;
+import com.gabriel.tiziano.teamheritage.exception.ResourceNotFoundException;
 import com.gabriel.tiziano.teamheritage.mapper.StadiumMapper;
 import com.gabriel.tiziano.teamheritage.repository.StadiumRepository;
-import jakarta.persistence.EntityNotFoundException;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
@@ -53,6 +53,6 @@ public class StadiumService {
 
     private Stadium resolveStadium(Long stadiumId) {
         return stadiumRepository.findById(stadiumId)
-                .orElseThrow(() -> new EntityNotFoundException("Stadium not found with id: " + stadiumId));
+                .orElseThrow(() -> new ResourceNotFoundException("Stadium not found with id: " + stadiumId));
     }
 }

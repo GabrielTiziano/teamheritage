@@ -4,6 +4,7 @@ import com.gabriel.tiziano.teamheritage.dto.request.UserRequest;
 import com.gabriel.tiziano.teamheritage.dto.response.UserResponse;
 import com.gabriel.tiziano.teamheritage.entities.Scope;
 import com.gabriel.tiziano.teamheritage.entities.User;
+import com.gabriel.tiziano.teamheritage.exception.EmailAlreadyExistsException;
 import com.gabriel.tiziano.teamheritage.mapper.UserMapper;
 import com.gabriel.tiziano.teamheritage.repository.ScopeRepository;
 import com.gabriel.tiziano.teamheritage.repository.UserRepository;
@@ -30,7 +31,7 @@ public class UserService {
     @Transactional
     public UserResponse createUser(UserRequest userRequest) {
         if (userAlreadyExists(userRequest.email())) {
-            throw new IllegalArgumentException("User with email " + userRequest.email() + " already exists.");
+            throw new EmailAlreadyExistsException("User with email " + userRequest.email() + " already exists.");
         }
 
         List<Scope> scopes = userRequest.scopes().stream()

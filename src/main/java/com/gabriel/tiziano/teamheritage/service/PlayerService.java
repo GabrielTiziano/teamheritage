@@ -4,10 +4,10 @@ import com.gabriel.tiziano.teamheritage.dto.request.PlayerRequest;
 import com.gabriel.tiziano.teamheritage.dto.response.PlayerResponse;
 import com.gabriel.tiziano.teamheritage.entities.Club;
 import com.gabriel.tiziano.teamheritage.entities.Player;
+import com.gabriel.tiziano.teamheritage.exception.ResourceNotFoundException;
 import com.gabriel.tiziano.teamheritage.mapper.PlayerMapper;
 import com.gabriel.tiziano.teamheritage.repository.ClubRepository;
 import com.gabriel.tiziano.teamheritage.repository.PlayerRepository;
-import jakarta.persistence.EntityNotFoundException;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
@@ -39,9 +39,7 @@ public class PlayerService {
 
     @Transactional(readOnly = true)
     public Page<PlayerResponse> getPlayersByClubId(Long clubId, Pageable pageable) {
-        if (!clubRepository.existsById(clubId)) {
-            throw new EntityNotFoundException("Club not found with id: " + clubId);
-        }
+        resolveClub(clubId);
         return playerRepository.findByClubId(clubId, pageable)
                 .map(playerMapper::toResponse);
     }
@@ -68,11 +66,11 @@ public class PlayerService {
 
     private Player resolvePlayer(Long playerId) {
         return playerRepository.findById(playerId)
-                .orElseThrow(() -> new EntityNotFoundException("Player not found with id: " + playerId));
+                .orElseThrow(() -> new ResourceNotFoundException("Player not found with id: " + playerId));
     }
 
     private Club resolveClub(Long clubId) {
         return clubRepository.findById(clubId)
-                .orElseThrow(() -> new EntityNotFoundException("Club not found with id: " + clubId));
+                .orElseThrow(() -> new ResourceNotFoundException("Club not found with id: " + clubId));
     }
 }
