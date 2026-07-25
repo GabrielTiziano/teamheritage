@@ -1,6 +1,7 @@
 package com.gabriel.tiziano.teamheritage.service;
 
 import com.gabriel.tiziano.teamheritage.entities.Scope;
+import com.gabriel.tiziano.teamheritage.exception.ResourceNotFoundException;
 import com.gabriel.tiziano.teamheritage.repository.ScopeRepository;
 import org.springframework.stereotype.Service;
 
@@ -14,6 +15,6 @@ public class ScopeService {
 
     public Scope findById(Long id) {
         return scopeRepository.findById(id)
-                .orElseThrow(() -> new IllegalArgumentException("Scope with id " + id + " not found."));
+                .orElseThrow(() -> new ResourceNotFoundException("Scope with id " + id + " not found."));
     }
 }
