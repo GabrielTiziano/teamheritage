@@ -5,6 +5,7 @@ import org.slf4j.LoggerFactory;
 import org.springframework.dao.DataIntegrityViolationException;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ProblemDetail;
+import org.springframework.security.access.AccessDeniedException;
 import org.springframework.security.authentication.BadCredentialsException;
 import org.springframework.web.bind.MethodArgumentNotValidException;
 import org.springframework.web.bind.annotation.ExceptionHandler;
@@ -74,6 +75,15 @@ public class GlobalExceptionHandler {
         ProblemDetail problem = ProblemDetail.forStatusAndDetail(
                 HttpStatus.INTERNAL_SERVER_ERROR, "Ocorreu um erro inesperado");
         problem.setTitle("Erro interno");
+        problem.setProperty("timestamp", Instant.now());
+        return problem;
+    }
+
+    @ExceptionHandler(AccessDeniedException.class)
+    public ProblemDetail handleAccessDenied(AccessDeniedException ex) {
+        ProblemDetail problem = ProblemDetail.forStatusAndDetail(
+                HttpStatus.FORBIDDEN, "Voce nao tem permissao para acessar este recurso");
+        problem.setTitle("Acesso negado");
         problem.setProperty("timestamp", Instant.now());
         return problem;
     }
