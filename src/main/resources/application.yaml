@@ -16,6 +16,14 @@ spring:
   flyway:
     enabled: true
 
+springdoc:
+  swagger-ui:
+    path: /swagger-ui.html
+    operations-sorter: method
+    tags-sorter: alpha
+  api-docs:
+    path: /v3/api-docs
+
 jwt:
   public-key: classpath:app.pub
   private-key: classpath:app.key
